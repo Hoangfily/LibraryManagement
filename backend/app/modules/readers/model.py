@@ -1,6 +1,6 @@
 """
-Model bang `readers` trong database.
-Luu thong tin doc gia (nguoi muon sach).
+Reader model — defines the `readers` table in the database.
+Stores information about library patrons who borrow books.
 """
 
 from sqlalchemy import Column, Date, DateTime, Integer, String, func

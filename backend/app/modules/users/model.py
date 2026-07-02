@@ -1,6 +1,6 @@
 """
-Model bang `users` trong database.
-Luu thong tin tai khoan dang nhap cua admin va librarian.
+User model — defines the `users` table in the database.
+Stores login credentials for admin and librarian accounts.
 """
 
 from sqlalchemy import Column, DateTime, Enum, Integer, String, func

@@ -1,6 +1,6 @@
 """
-Dependencies dung chung cho xac thuc va phan quyen.
-Cac router khac import get_current_user, require_admin, require_librarian tu day.
+Shared dependencies for authentication and authorization.
+Other routers import get_current_user, require_admin, require_librarian from here.
 """
 
 from fastapi import Depends, HTTPException, status
@@ -20,8 +20,9 @@ def get_current_user(
     db: Session = Depends(get_db),
 ) -> User:
     """
-    Dependency lay user hien tai tu JWT token trong header Authorization.
-    Tra ve User object neu token hop le, raise 401 neu khong.
+    Dependency that extracts the current user from the JWT token
+    in the Authorization header. Returns a User object if the token
+    is valid, raises 401 otherwise.
     """
     token = credentials.credentials
     payload = decode_access_token(token)
@@ -48,7 +49,7 @@ def get_current_user(
 
 
 def require_admin(current_user: User = Depends(get_current_user)) -> User:
-    """Dependency yeu cau user phai la admin."""
+    """Dependency that requires the current user to be an admin."""
     if current_user.role != UserRole.ADMIN:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -58,7 +59,7 @@ def require_admin(current_user: User = Depends(get_current_user)) -> User:
 
 
 def require_librarian(current_user: User = Depends(get_current_user)) -> User:
-    """Dependency yeu cau user phai la librarian hoac admin."""
+    """Dependency that requires the current user to be a librarian or admin."""
     if current_user.role not in (UserRole.ADMIN, UserRole.LIBRARIAN):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

@@ -1,22 +1,22 @@
 """
-Khai bao cac hang so dung chung trong he thong.
+Shared constants used across the application.
 """
 
 
 class UserRole:
-    """Cac role cua user trong he thong."""
+    """User roles in the system."""
 
     ADMIN = "admin"
     LIBRARIAN = "librarian"
 
 
 class ErrorMessage:
-    """Cac thong bao loi chung."""
+    """Common error messages."""
 
-    INVALID_CREDENTIALS = "Sai ten dang nhap hoac mat khau"
-    TOKEN_EXPIRED = "Token da het han"
-    TOKEN_INVALID = "Token khong hop le"
-    PERMISSION_DENIED = "Khong co quyen truy cap"
-    USER_NOT_FOUND = "Khong tim thay nguoi dung"
-    USER_ALREADY_EXISTS = "Ten dang nhap da ton tai"
-    INTERNAL_ERROR = "Loi he thong, vui long thu lai"
+    INVALID_CREDENTIALS = "Invalid username or password"
+    TOKEN_EXPIRED = "Token has expired"
+    TOKEN_INVALID = "Invalid token"
+    PERMISSION_DENIED = "Permission denied"
+    USER_NOT_FOUND = "User not found"
+    USER_ALREADY_EXISTS = "Username already exists"
+    INTERNAL_ERROR = "Internal server error, please try again"

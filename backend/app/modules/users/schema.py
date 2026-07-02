@@ -1,5 +1,5 @@
 """
-Pydantic schemas cho request/response cua user module.
+Pydantic schemas for user request/response validation.
 """
 
 from typing import Optional
@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 
 class UserCreate(BaseModel):
-    """Schema tao user moi."""
+    """Schema for creating a new user."""
 
     username: str
     password: str
@@ -17,7 +17,7 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
-    """Schema tra ve thong tin user (khong bao gom password)."""
+    """Schema for returning user information (excludes password)."""
 
     id: int
     username: str
@@ -30,7 +30,7 @@ class UserResponse(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    """Schema cap nhat thong tin user."""
+    """Schema for updating user information."""
 
     full_name: Optional[str] = None
     role: Optional[str] = None

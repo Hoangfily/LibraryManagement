@@ -1,6 +1,6 @@
 """
-Dinh nghia format response chung cho toan bo API.
-Moi response deu co dang:
+Common API response format.
+Every response follows the structure:
 {
     "success": true/false,
     "message": "...",
@@ -14,7 +14,7 @@ from pydantic import BaseModel
 
 
 class APIResponse(BaseModel):
-    """Schema chung de hien thi tren Swagger docs."""
+    """Common response schema for Swagger docs."""
 
     success: bool
     message: str
@@ -23,10 +23,10 @@ class APIResponse(BaseModel):
 
 def success_response(
     data: Any = None,
-    message: str = "Thanh cong",
+    message: str = "Success",
     status_code: int = 200,
 ) -> dict:
-    """Tra ve response thanh cong voi format chuan."""
+    """Return a standardized success response."""
     return {
         "success": True,
         "message": message,
@@ -35,11 +35,11 @@ def success_response(
 
 
 def error_response(
-    message: str = "Da xay ra loi",
+    message: str = "An error occurred",
     status_code: int = 400,
     data: Any = None,
 ) -> dict:
-    """Tra ve response loi voi format chuan."""
+    """Return a standardized error response."""
     return {
         "success": False,
         "message": message,

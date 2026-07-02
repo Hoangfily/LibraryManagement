@@ -1,5 +1,5 @@
 """
-Service xu ly business logic lien quan den user.
+Business logic service for user management.
 """
 
 from sqlalchemy.orm import Session
@@ -9,12 +9,12 @@ from app.modules.users.model import User
 
 
 def get_user_by_username(db: Session, username: str) -> User | None:
-    """Tim user theo username."""
+    """Find a user by username."""
     return db.query(User).filter(User.username == username).first()
 
 
 def create_user(db: Session, username: str, password: str, full_name: str, role: str = "librarian") -> User:
-    """Tao user moi voi password da hash."""
+    """Create a new user with a hashed password."""
     user = User(
         username=username,
         hashed_password=hash_password(password),
@@ -28,13 +28,13 @@ def create_user(db: Session, username: str, password: str, full_name: str, role:
 
 
 def get_all_users(db: Session) -> list[User]:
-    """Lay danh sach tat ca users."""
+    """Retrieve all users."""
     return db.query(User).all()
 
 
 def seed_admin(db: Session):
     """
-    Tao tai khoan admin mac dinh neu chua ton tai.
+    Create the default admin account if it does not exist.
     Username: admin, Password: admin123
     """
     existing = get_user_by_username(db, "admin")
@@ -46,6 +46,6 @@ def seed_admin(db: Session):
             full_name="Administrator",
             role="admin",
         )
-        print("[SEED] Da tao tai khoan admin mac dinh: admin / admin123")
+        print("[SEED] Created default admin account: admin / admin123")
     else:
-        print("[SEED] Tai khoan admin da ton tai, bo qua.")
+        print("[SEED] Admin account already exists, skipping.")

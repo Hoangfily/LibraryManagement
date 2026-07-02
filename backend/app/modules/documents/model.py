@@ -1,6 +1,6 @@
 """
-Model bang `documents` trong database.
-Luu thong tin tai lieu (sach) cua thu vien.
+Document model — defines the `documents` table in the database.
+Stores information about library books and documents.
 """
 
 from sqlalchemy import Column, DateTime, Integer, String, Text, func

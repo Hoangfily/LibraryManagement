@@ -1,6 +1,6 @@
 """
-Model bang `document_copies` trong database.
-Moi ban sao vat ly cua tai lieu duoc theo doi rieng biet de quan ly muon/tra.
+DocumentCopy model — defines the `document_copies` table in the database.
+Each physical copy of a document is tracked individually for borrow management.
 """
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, func

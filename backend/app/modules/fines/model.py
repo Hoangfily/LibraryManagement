@@ -1,6 +1,6 @@
 """
-Model bang `fines` trong database.
-Luu thong tin phat (tien phat) khi doc gia tra sach tre hoac lam mat sach.
+Fine model — defines the `fines` table in the database.
+Stores fine records when readers return books late or lose/damage them.
 """
 
 from sqlalchemy import Column, DateTime, Enum, Float, ForeignKey, Integer, String, func

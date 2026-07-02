@@ -1,19 +1,19 @@
 """
-Pydantic schemas cho request/response cua auth module.
+Pydantic schemas for auth request/response validation.
 """
 
 from pydantic import BaseModel
 
 
 class LoginRequest(BaseModel):
-    """Schema cho request dang nhap."""
+    """Schema for login request."""
 
     username: str
     password: str
 
 
 class TokenResponse(BaseModel):
-    """Schema cho response tra ve JWT token."""
+    """Schema for JWT token response."""
 
     access_token: str
     token_type: str = "bearer"

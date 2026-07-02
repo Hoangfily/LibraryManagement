@@ -1,7 +1,7 @@
 """
-Models bang `borrow_orders` va `borrow_items` trong database.
-- borrow_orders: don muon sach cua doc gia.
-- borrow_items: chi tiet tung cuon sach trong don muon.
+Borrow models — defines `borrow_orders` and `borrow_items` tables.
+- borrow_orders: a reader's borrow request.
+- borrow_items: individual book copies within a borrow order.
 """
 
 from sqlalchemy import Column, Date, DateTime, Enum, ForeignKey, Integer, func

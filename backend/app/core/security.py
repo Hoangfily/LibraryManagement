@@ -1,6 +1,6 @@
 """
-Module xu ly password hashing va JWT token.
-Su dung passlib (bcrypt) de hash password va python-jose de tao/xac thuc JWT.
+Password hashing and JWT token utilities.
+Uses passlib (bcrypt) for password hashing and python-jose for JWT creation/verification.
 """
 
 from datetime import datetime, timedelta, timezone
@@ -16,20 +16,20 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password: str) -> str:
-    """Hash mot password bang bcrypt."""
+    """Hash a password using bcrypt."""
     return pwd_context.hash(password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """So sanh password nguoi dung nhap voi password da hash."""
+    """Compare a plain-text password against its hashed version."""
     return pwd_context.verify(plain_password, hashed_password)
 
 
 # ---- JWT token ----
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """
-    Tao JWT access token.
-    `data` can chua it nhat key "sub" (subject, thuong la username hoac user_id).
+    Create a JWT access token.
+    `data` should contain at least a "sub" key (subject, typically username or user_id).
     """
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
@@ -46,7 +46,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 def decode_access_token(token: str) -> Optional[dict]:
     """
-    Giai ma JWT token. Tra ve payload dict neu hop le, None neu khong.
+    Decode a JWT token. Returns the payload dict if valid, None otherwise.
     """
     try:
         payload = jwt.decode(

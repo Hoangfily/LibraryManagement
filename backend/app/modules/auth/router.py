@@ -1,5 +1,5 @@
 """
-Router dinh nghia cac endpoint xac thuc: dang nhap.
+Router for authentication endpoints: login.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -17,8 +17,8 @@ router = APIRouter()
 @router.post("/login")
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     """
-    Dang nhap va nhan JWT access token.
-    Chi danh cho admin va librarian.
+    Login and receive a JWT access token.
+    Only for admin and librarian users.
     """
     user = authenticate_user(db, request.username, request.password)
     if not user:
@@ -30,5 +30,5 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     token = create_token_for_user(user)
     return success_response(
         data=TokenResponse(access_token=token).model_dump(),
-        message="Dang nhap thanh cong",
+        message="Login successful",
     )

@@ -1,6 +1,6 @@
 """
-Entry point cua ung dung FastAPI.
-Khi khoi dong: tao tat ca bang trong DB va seed tai khoan admin mac dinh.
+Entry point for the FastAPI application.
+On startup: creates all database tables and seeds the default admin account.
 """
 
 from contextlib import asynccontextmanager
@@ -22,9 +22,9 @@ from app.modules.users.service import seed_admin
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Lifespan event: chay khi app khoi dong va tat.
-    - Tao tat ca bang trong DB (neu chua ton tai).
-    - Seed tai khoan admin mac dinh.
+    Lifespan event handler: runs on app startup and shutdown.
+    - Creates all database tables (if they don't exist).
+    - Seeds the default admin account.
     """
     # Startup
     init_db()
@@ -34,12 +34,12 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
     yield
-    # Shutdown (khong can lam gi)
+    # Shutdown (nothing to do)
 
 
 app = FastAPI(title="Library Management API", lifespan=lifespan)
 
-# Include cac router theo tung module de de chia viec va merge code.
+# Include routers for each module for easy task splitting and code merging.
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 app.include_router(users_router, prefix="/users", tags=["Users"])
 app.include_router(readers_router, prefix="/readers", tags=["Readers"])
@@ -52,5 +52,5 @@ app.include_router(reports_router, prefix="/reports", tags=["Reports"])
 
 @app.get("/")
 def root():
-    """Endpoint kiem tra server dang chay."""
+    """Health check endpoint to verify the server is running."""
     return {"message": "Library Management API"}

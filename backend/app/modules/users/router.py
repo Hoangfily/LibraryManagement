@@ -1,6 +1,6 @@
 """
-Router dinh nghia cac endpoint quan ly user.
-Chi admin moi duoc tao/xem danh sach user.
+Router for user management endpoints.
+Only admins can create users or view the user list.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -23,7 +23,7 @@ def create_new_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
 ):
-    """Tao user moi (chi admin)."""
+    """Create a new user (admin only)."""
     existing = get_user_by_username(db, request.username)
     if existing:
         raise HTTPException(
@@ -39,7 +39,7 @@ def create_new_user(
     )
     return success_response(
         data=UserResponse.model_validate(user).model_dump(),
-        message="Tao user thanh cong",
+        message="User created successfully",
     )
 
 
@@ -48,7 +48,7 @@ def list_users(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
 ):
-    """Lay danh sach tat ca users (chi admin)."""
+    """Retrieve all users (admin only)."""
     users = get_all_users(db)
     data = [UserResponse.model_validate(u).model_dump() for u in users]
-    return success_response(data=data, message="Lay danh sach user thanh cong")
+    return success_response(data=data, message="Users retrieved successfully")

@@ -1,5 +1,5 @@
 """
-Service xu ly logic xac thuc nguoi dung va JWT.
+Service for user authentication and JWT token generation.
 """
 
 from sqlalchemy.orm import Session
@@ -10,8 +10,8 @@ from app.modules.users.model import User
 
 def authenticate_user(db: Session, username: str, password: str) -> User | None:
     """
-    Xac thuc user bang username va password.
-    Tra ve User object neu hop le, None neu sai.
+    Authenticate a user by username and password.
+    Returns the User object if valid, None otherwise.
     """
     user = db.query(User).filter(User.username == username).first()
     if not user:
@@ -24,7 +24,7 @@ def authenticate_user(db: Session, username: str, password: str) -> User | None:
 
 
 def create_token_for_user(user: User) -> str:
-    """Tao JWT access token chua thong tin user."""
+    """Create a JWT access token containing user information."""
     token_data = {
         "sub": str(user.id),
         "username": user.username,
