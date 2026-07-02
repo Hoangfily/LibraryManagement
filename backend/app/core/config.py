@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    # Cau hinh doc tu bien moi truong trong file .env.
+    # Application settings loaded from environment variables in .env file.
     app_name: str = "Library Management API"
     database_url: str = "mysql+pymysql://user:password@localhost:3306/library_db"
     secret_key: str = "change-me"
