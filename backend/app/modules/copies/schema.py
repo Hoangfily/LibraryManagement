@@ -1,11 +1,15 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CopyCreate(BaseModel):
     copy_code: str
+
+
+class CopyBulkCreate(BaseModel):
+    quantity: int = Field(default=1, ge=1, le=100)
 
 
 class CopyStatusUpdate(BaseModel):

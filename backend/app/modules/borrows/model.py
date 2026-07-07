@@ -5,6 +5,7 @@ Borrow models — defines `borrow_orders` and `borrow_items` tables.
 """
 
 from sqlalchemy import Column, Date, DateTime, Enum, ForeignKey, Integer, func
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -19,12 +20,19 @@ class BorrowOrder(Base):
     borrow_date = Column(Date, nullable=False)
     due_date = Column(Date, nullable=False)
     status = Column(
-        Enum("borrowing", "returned", "overdue", name="order_status"),
+        Enum("borrowing", "returned", "overdue", "cancelled", name="order_status"),
         nullable=False,
         default="borrowing",
     )
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    items = relationship(
+        "BorrowItem",
+        backref="order",
+        cascade="all, delete-orphan",
+        order_by="BorrowItem.id",
+    )
 
 
 class BorrowItem(Base):
@@ -39,7 +47,7 @@ class BorrowItem(Base):
     )
     returned_date = Column(Date, nullable=True)
     status = Column(
-        Enum("borrowing", "returned", "lost", name="item_status"),
+        Enum("borrowing", "returned", "lost", "cancelled", name="item_status"),
         nullable=False,
         default="borrowing",
     )

@@ -6,6 +6,7 @@ On startup: creates all database tables and seeds the default admin account.
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import SessionLocal, init_db
 from app.modules.auth.router import router as auth_router
@@ -38,6 +39,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Library Management API", lifespan=lifespan)
+
+# CORS — allow frontend to call API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include routers for each module for easy task splitting and code merging.
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
