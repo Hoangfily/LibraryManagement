@@ -11,7 +11,7 @@ from app.common.response import success_response
 from app.core.database import get_db
 from app.core.deps import require_librarian
 from app.modules.fines.schema import FineResponse
-from app.modules.fines.service import get_all_fines, get_fine_by_id
+from app.modules.fines.service import get_all_fines, get_fine_by_id, pay_fine
 from app.modules.users.model import User
 
 router = APIRouter()
@@ -43,4 +43,18 @@ def get_fine(
     return success_response(
         data=FineResponse.model_validate(fine).model_dump(),
         message="Get fine successfully",
+    )
+
+
+@router.patch("/{fine_id}/pay")
+def pay_fine_endpoint(
+    fine_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_librarian),
+):
+    """Mark a fine as paid."""
+    fine = pay_fine(db, fine_id)
+    return success_response(
+        data=FineResponse.model_validate(fine).model_dump(),
+        message="Fine marked as paid",
     )

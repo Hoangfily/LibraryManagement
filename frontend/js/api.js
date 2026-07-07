@@ -83,6 +83,7 @@ const api = {
     return request('GET', `/fines${qs ? `?${qs}` : ''}`);
   },
   getFine: (id) => request('GET', `/fines/${id}`),
+  payFine: (id) => request('PATCH', `/fines/${id}/pay`),
 
   // Reports
   getSummary: () => request('GET', '/reports/summary'),

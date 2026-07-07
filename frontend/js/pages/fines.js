@@ -40,17 +40,30 @@ pages.fines = {
           <td>${f.reason || '—'}</td>
           <td><span class="badge ${f.status === 'paid' ? 'badge-success' : 'badge-danger'}">${f.status === 'paid' ? '✓ Đã trả' : '✕ Chưa trả'}</span></td>
           <td>${new Date(f.created_at).toLocaleDateString('vi-VN')}</td>
+          <td>
+            ${f.status === 'unpaid' ? `<button class="btn-icon" title="Đánh dấu đã thanh toán" onclick="pages.fines.payFine(${f.id})">💵</button>` : '—'}
+          </td>
         </tr>
-      `).join('') : '<tr><td colspan="8" class="table-empty">Không có khoản phạt nào</td></tr>';
+      `).join('') : '<tr><td colspan="9" class="table-empty">Không có khoản phạt nào</td></tr>';
 
       document.getElementById('fines-table').innerHTML = `
         <div class="table-container">
           <table>
-            <thead><tr><th>ID</th><th>Reader ID</th><th>Borrow Item</th><th>Loại</th><th>Số tiền</th><th>Lý do</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead>
+            <thead><tr><th>ID</th><th>Reader ID</th><th>Borrow Item</th><th>Loại</th><th>Số tiền</th><th>Lý do</th><th>Trạng thái</th><th>Ngày tạo</th><th>Hành động</th></tr></thead>
             <tbody>${tbody}</tbody>
           </table>
         </div>
       `;
+    } catch (err) { showToast(err.message, 'error'); }
+  },
+
+  async payFine(id) {
+    const ok = await confirmDialog('Xác nhận đã thu tiền phạt này?');
+    if (!ok) return;
+    try {
+      await api.payFine(id);
+      showToast('Đã đánh dấu thanh toán!', 'success');
+      await this.loadTable();
     } catch (err) { showToast(err.message, 'error'); }
   },
 };

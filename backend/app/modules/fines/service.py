@@ -35,3 +35,17 @@ def get_fine_by_id(db: Session, fine_id: int) -> Fine:
             detail="Fine not found",
         )
     return fine
+
+
+def pay_fine(db: Session, fine_id: int) -> Fine:
+    """Mark a fine as paid."""
+    fine = get_fine_by_id(db, fine_id)
+    if fine.status == "paid":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Fine is already paid",
+        )
+    fine.status = "paid"
+    db.commit()
+    db.refresh(fine)
+    return fine
