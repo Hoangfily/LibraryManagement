@@ -33,6 +33,20 @@ FINE_PER_LATE_DAY = 5000
 ACTIVE_ORDER_STATUSES = ("borrowing", "overdue")
 
 
+def _refresh_overdue_status(db: Session, order: BorrowOrder) -> BorrowOrder:
+    """Flip a "borrowing" order to "overdue" once its due_date has passed.
+
+    The status is otherwise never assigned anywhere, so without this lazy
+    check on read, orders past due_date stay "borrowing" forever and the
+    "overdue" filter never returns anything.
+    """
+    if order.status == "borrowing" and date.today() > order.due_date:
+        order.status = "overdue"
+        db.commit()
+        db.refresh(order)
+    return order
+
+
 def get_borrow_order_by_id(db: Session, order_id: int) -> BorrowOrder:
     """Fetch a borrow order by id, raising 404 if not found."""
     order = db.query(BorrowOrder).filter(BorrowOrder.id == order_id).first()
@@ -41,7 +55,7 @@ def get_borrow_order_by_id(db: Session, order_id: int) -> BorrowOrder:
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Borrow order not found",
         )
-    return order
+    return _refresh_overdue_status(db, order)
 
 
 def get_all_borrow_orders(
@@ -50,6 +64,18 @@ def get_all_borrow_orders(
     status_filter: Optional[str] = None,
 ) -> List[BorrowOrder]:
     """List borrow orders, optionally filtered by reader_id and/or status."""
+    # Bulk-flip any "borrowing" orders whose due_date has passed before
+    # filtering, so status_filter="overdue" and status_filter="borrowing"
+    # both reflect the current date instead of the stale stored value.
+    overdue_orders = db.query(BorrowOrder).filter(
+        BorrowOrder.status == "borrowing",
+        BorrowOrder.due_date < date.today(),
+    ).all()
+    for order in overdue_orders:
+        order.status = "overdue"
+    if overdue_orders:
+        db.commit()
+
     query = db.query(BorrowOrder)
     if reader_id is not None:
         query = query.filter(BorrowOrder.reader_id == reader_id)
